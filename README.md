@@ -7,3 +7,4 @@ Notes:
 1. The PS/2 keyboard uses Scan code set 2 only
 2. The code is using simple delays for the timing and bit-banging with the PS/2 bus, this is to avoid funny ESP32 interrupt side effects.
 3. Motherboards might have slightly different ways of PS/2 initializing in terms of dealing with the PS/2 bus timing.
+![IBM_AT_USB_keyboard_HW](https://github.com/user-attachments/assets/f3f84d8d-aad0-4718-ab72-accd76cc90af)
