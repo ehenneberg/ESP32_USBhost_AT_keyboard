@@ -4,7 +4,7 @@
 // Hardware used: ESP32-S3 zero, 2x BC547B and 6 resistors, USB-C to USB-A OTG connector
 // Flashing the ESP32-S3 zero board goes via RX and TX pins using an ESP-01 programmer. 
 // Timing for in/out serial data is made with simple software delays to bitbang in/out data
-// for the motherboard ( BIOS and OS ) and to avoid ESP32 interrupts
+// for the motherboard ( BIOS and OS ) and to avoid ESP32 interrupts.
 // Further description at: https://larsenhenneberg.dk
 
 #include "USBtoPS2_conversion_table.h" // USB keycode to PS/2 scan code set 2 conversion table
@@ -56,8 +56,8 @@
 #define initTimeOut 30000           // PS/2 init timeout in msec.
 #define PS2clkHalfBitTime 20        // PS/2 half clock bit time in usec.
 #define PS2clkBitTime 40            // PS/2 clock bit time => 2 bit clk period ~ 12.5 kHz
-#define delayBeforeRxPS2cmd 250     // delay before clocking in a PS/2 command 
-#define ackResponseDelay 650        // ack send_response delay on a motherboard command
+#define delayBeforeRxPS2cmd 650     // delay before clocking in a PS/2 command in usec.
+#define ackResponseDelay 650        // ack send_response delay on a PS/2 command in usec.
 #define keyboardResetDelay 250000   // emulate keyboard reset delay in usec.
 #define PS2cmdResponseDelay 300     // response delay on PS/2 command in usec.
 #define PS2scanCodeDelay 1500       // delay before sending PS/2 keyboard scan code in usec.
