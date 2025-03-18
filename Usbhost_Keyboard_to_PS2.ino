@@ -10,15 +10,15 @@
 #include "USBtoPS2_conversion_table.h" // USB keycode to PS/2 scan code set 2 conversion table
 #include "EspUsbHost.h"                // ESP32 USBhost keyboard/mouse HID class definitions
 
-// PS/2 clock and data In/Out pin as noted on the ESP32-S3 zero board
-#define PS2clkOutPin  5
-#define PS2clkInPin   6
-#define PS2dataOutPin 8
-#define PS2dataInPin  7
-#define greenLedPin 11
+// PS/2 clock and data In/Out pins as noted on the ESP32-S3 zero board
+#define PS2clkOutPin  5   // pin to pull the PS/2 clock signal low via a BC547B transistor
+#define PS2clkInPin   6   // pin to read the PS/2 clock signal via a voltage divider   
+#define PS2dataOutPin 8   // pin to pull the PS/2 data signal low via a BC547B transistor
+#define PS2dataInPin  7   // pin to read the PS/2 data signal via a voltage divider   
+#define greenLedPin 11    // pin to green LED via a 220 ohm resistor
 
-// level for clock and data output, inverted due to the open collector
-// NPN transistors used for pulling the PS/2 bus physically low
+// level for clock and data output, inverted states due to the open collector
+// NPN transistors used for pulling the PS/2 bus signals physically low
 #define PS2busOutLOW 1
 #define PS2busOutHIGH 0
 
@@ -52,14 +52,14 @@
 #define scanCodeVal 0x41  // Scan set 2 value response
 
 // PS/2 bus and init timing values
-#define PS2powerUpDelay 5000        // power up delay in msec.
-#define initTimeOut 30000           // PS/2 init timeout in msec.
+#define PS2powerUpDelay 2000        // power up delay in msec.
+#define initTimeOut 33000           // PS/2 init timeout in msec.
 #define PS2clkHalfBitTime 20        // PS/2 half clock bit time in usec.
 #define PS2clkBitTime 40            // PS/2 clock bit time => 2 bit clk period ~ 12.5 kHz
-#define delayBeforeRxPS2cmd 650     // delay before clocking in a PS/2 command in usec.
-#define ackResponseDelay 650        // ack send_response delay on a PS/2 command in usec.
-#define keyboardResetDelay 250000   // emulate keyboard reset delay in usec.
-#define PS2cmdResponseDelay 300     // response delay on PS/2 command in usec.
+#define delayBeforeRxPS2cmd 950     // delay before clocking in a PS/2 command in usec.
+#define ackResponseDelay 700        // ack send_response delay on a PS/2 command in usec.
+#define keyboardResetDelay 950000   // emulate keyboard reset delay in usec.
+#define PS2cmdResponseDelay 950     // response delay on PS/2 command in usec.
 #define PS2scanCodeDelay 1500       // delay before sending PS/2 keyboard scan code in usec.
 
 uint8_t PS2cmd, lastPS2cmd, repeatRate, keyboardStatus, setScanCodeVal;
