@@ -10,4 +10,3 @@ Notes:
 4. 
 ![IBM_AT_USB_keyboard_HW](https://github.com/user-attachments/assets/f3f84d8d-aad0-4718-ab72-accd76cc90af)
 
-![PS2_bus_IF](https://github.com/user-attachments/assets/cea73ba7-e2ed-4a1f-894d-dd5f416d399d)
