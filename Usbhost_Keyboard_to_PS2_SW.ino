@@ -2,11 +2,12 @@
 // select board as Waveshare ESP32-S3-Zero
 // Note: only the PS/2 keyboard scan code set 2 is supported.!
 // The keyboard USBhosting mostly originates from https://github.com/tanakamasayuki/EspUsbHost
-// Hardware used: ESP32-S3 zero, 2x BC547B and 6 resistors, USB-C to USB-A OTG connector
+// Hardware: ESP32-S3 zero, 2x BC547B, 7 resistors, 1 LED and USB-C to USB-A OTG connector
 // Flashing the ESP32-S3 zero board goes via RX and TX pins using an ESP-01 programmer. 
 // Timing for in/out serial data is made with simple software delays to bitbang in/out data
 // for the motherboard ( BIOS and OS ) and to avoid ESP32 interrupts.
 // Key repeating takes place for: normal/shift letters and numbers, BkSP, Tab, Space, arrow keys
+// The green LED lights up when a key at the USB keyboard is pressed 
 // Further description at: https://larsenhenneberg.dk
 
 #include "USBtoPS2_conversion_table.h" // USB keycode to PS/2 scan code set 2 conversion table
@@ -17,7 +18,7 @@
 #define PS2clkInPin   6   // pin to read the PS/2 clock signal via a voltage divider   
 #define PS2dataOutPin 8   // pin to pull the PS/2 data signal low via a BC547B transistor
 #define PS2dataInPin  7   // pin to read the PS/2 data signal via a voltage divider   
-#define greenLedPin 11    // pin to green LED via a 220 ohm resistor
+#define greenLedPin  11   // pin to green LED via a 220 ohm resistor
 
 // level for clock and data output, inverted states due to the open collector
 // NPN transistors used for pulling the PS/2 bus signals physically low
