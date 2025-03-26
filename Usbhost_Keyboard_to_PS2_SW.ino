@@ -222,8 +222,8 @@ void setup() {
   digitalWrite(PS2dataOutPin, PS2busOutHIGH); // PS2 data high
   pinMode(PS2clkInPin, INPUT_PULLUP);      // set PS2 clk input pin as input
   pinMode(PS2dataInPin, INPUT_PULLUP);     // set PS2 data input pin as input
-  pinMode(greenLedPin, OUTPUT);    // set PS2 clk output pin as output
-  digitalWrite(greenLedPin, LOW);  // green led off
+  pinMode(greenLedPin, OUTPUT);            // set green LED pin as output
+  digitalWrite(greenLedPin, LOW);          // green led off
   lastPS2cmd = 0x33;      // no PS2 cmd read yet, so set a non existing cmd
   Serial.println("Enter " + String(initTimeOut/1000) + " sec. PS/2 boot sequence");
   initPS2();      // perform the start-up PS/2 initialization with motherboard 
