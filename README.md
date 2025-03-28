@@ -11,6 +11,7 @@ Notes:
 ![IBM_AT_USB_keyboard_HW](https://github.com/user-attachments/assets/f3f84d8d-aad0-4718-ab72-accd76cc90af)
 
 Links:
+
 https://wiki.osdev.org/USB_Human_Interface_Devices
 
 https://wiki.osdev.org/PS/2_Keyboard
