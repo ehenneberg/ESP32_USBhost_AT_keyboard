@@ -3,6 +3,9 @@ ESP32-S3 as USB host to emulate an IBM AT compatible keyboard. The intention is 
 The IBM AT keyboard emulation can use any USB keyboard as input and use the PS/2 keyboard protocol for PS/2 scan code set 2.
 Hardware used is an ESP32-S3 zero board, 2 BC547B transistors, 7 resistors, 1 green LED and an OTG USB-C converter.
 The code is made in Arduino IDE with an ESP 01 programmer to work with the ESP32-S3 UART0.
+
+Hardware and tech. information at: https://larsenhenneberg.dk/
+ 
 Notes:
 1. The PS/2 keyboard emulation uses Scan code set 2 only
 2. The code is using edge triggered interrupt and simple delays for the timing with the PS/2 bus.
