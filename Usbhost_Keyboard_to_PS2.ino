@@ -1,4 +1,4 @@
-// Software for an adapter to connect an USB keyboard to an IBM AT compatible motherboard
+// Software for an adapter to connect an USB keyboard to an GA-486US AT motherboard
 // select board as Waveshare ESP32-S3-Zero
 // Note: only the PS/2 keyboard scan code set 2 is supported.!
 // The keyboard USBhosting mostly originates from https://github.com/tanakamasayuki/EspUsbHost
@@ -108,12 +108,30 @@ void sendPS2scanbyte(uint8_t outbyte) {
   sendPS2byte(outbyte, PS2scanCodeDelay);
 }
 
+void sendPs2_BreakCodes( uint8_t USBkeyCode)
+{
+  for (int i = 0; i < 3; i++ ) {
+    if (Break_USBtoPS2scanSet2[USBkeyCode][i] != 0) {
+      sendPS2scanbyte(Break_USBtoPS2scanSet2[USBkeyCode][i]);
+    }
+  }
+}
+
+void sendPs2_MakeCodes( uint8_t USBkeyCode)
+{
+  for (int i = 0; i < 2; i++ ) {
+    if (Make_USBtoPS2scanSet2[USBkeyCode][i] != 0) {
+      sendPS2scanbyte(Make_USBtoPS2scanSet2[USBkeyCode][i]);
+    }
+  }
+}
+
 // convert the USB keycode to PS/2 scan codes via the USBtoPS2_conversion_table.h
 // look up PS/2 scan code set 2 data and transmits the PS/2 scan codes. 
 void sendPS2scanCode(uint8_t USBkeycode, uint8_t makeBreak, uint8_t modifier) {
   if (modifier == 0) {  // non modifier key
     if (makeBreak == 0) {                 // USB key pressed
-      digitalWrite(greenLedPin, HIGH);    // break => green led off
+      digitalWrite(greenLedPin, HIGH);    // break => green led on
       // repeat keys only for normal/shift letters and numbers, BkSP, Tab, Space, arrow keys !
       if (((USBkeycode >= 0x04) && (USBkeycode <= 0x27)) || ((USBkeycode >= 0x2A) && (USBkeycode <= 0x2C)) || ((USBkeycode >= 0x4F) && (USBkeycode <= 0x52))) {
         gotMakeKey = true;                  // indicate USB key pressed
@@ -121,17 +139,17 @@ void sendPS2scanCode(uint8_t USBkeycode, uint8_t makeBreak, uint8_t modifier) {
         keyPressedTime = millis();  // start timer for repeat key
       }
     } else {                              // USB key released
-      digitalWrite(greenLedPin, LOW);     // make => green led on
+      digitalWrite(greenLedPin, LOW);     // make => green led off
       gotMakeKey = false;              // indicate USB key released
     }
     switch (USBkeycode) {
       case 0x48:              // PrtPause ?
-        if (makeBreak == 1) {  // PrtPause and Make ? 
+        if (makeBreak == 0) {  // PrtPause and Make ? 
           for (int i=0; i < 8; i++) { sendPS2scanbyte(PrtPauseMake[i]); }
         }
         break;
       case 0x46:           // PrtScr ?
-        if (makeBreak == 1) {
+        if (makeBreak == 0) {
           for (int i=0; i < 4; i++) { sendPS2scanbyte(PrtScrMake[i]); }
         }
         else {
@@ -139,13 +157,12 @@ void sendPS2scanCode(uint8_t USBkeycode, uint8_t makeBreak, uint8_t modifier) {
         }
         break;
       default:
-        if (makeBreak == 0) {         // USB key released
-          sendPS2scanbyte(0xF0);      // break code
+        if (makeBreak == 1) {         // USB key released => send PS2 break codes
+         sendPs2_BreakCodes(USBkeycode);
         }
-        sendPS2scanbyte(USBtoPS2scanSet2[USBkeycode][0]);
-        if (USBtoPS2scanSet2[USBkeycode][1] != 0) {
-          sendPS2scanbyte(USBtoPS2scanSet2[USBkeycode][1]);
-        }           
+        else {                       // USB key pressed => send PS2 make codes
+          sendPs2_MakeCodes(USBkeycode);      
+        }
     } 
   }
   else {    // dispatch modifier keys
@@ -366,17 +383,11 @@ void loop() {
   }
   // USB make key present longer the repeatKeyInterval ? then repeat/preempty current key
   if ((gotMakeKey == true) && ((millis() - keyPressedTime) > repeatKeyInterval)) {
-    sendPS2scanbyte(0xF0);                                   // send a PS/2 break key
-    sendPS2scanbyte(USBtoPS2scanSet2[lastUSBkeycode][0]);
-    if (USBtoPS2scanSet2[lastUSBkeycode][1] != 0) {
-      sendPS2scanbyte(USBtoPS2scanSet2[lastUSBkeycode][1]);
-    } 
+    sendPs2_BreakCodes(lastUSBkeycode);
     delay(makeBreakPS2delay);                     // delay between PS/2 make and break
-    sendPS2scanbyte(USBtoPS2scanSet2[lastUSBkeycode][0]);  // send a PS/2 make key
-    if (USBtoPS2scanSet2[lastUSBkeycode][1] != 0) {
-      sendPS2scanbyte(USBtoPS2scanSet2[lastUSBkeycode][1]);
-    } 
+    sendPs2_MakeCodes(lastUSBkeycode);            // repeat last USB key as PS2
     keyPressedTime = millis();                    // restart timer for repeat key
   }
   usbHost.task();
 } 
+
